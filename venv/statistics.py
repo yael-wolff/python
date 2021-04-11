@@ -109,9 +109,7 @@ for i in range(n):
     print("%d" % values[i]),
 
 mergeSort(values, 0, n - 1)
-print("\n\nSorted array is")
-for i in range(n):
-    print("%d" % values[i]),
+
 
 sum(values)
 mean(values)
