@@ -1,16 +1,25 @@
 import sys
 import pandas as pd
-from statistics import mean, median, sum
+from statistics import mean, median, sum, inside_median, mergeSort, merge
 
 
+def choose_func(name, values):
+    if name == mean:
+        mean(values)
+    elif name == sum:
+        sum(values)
+    elif name == median:
+        median(values)
 
 features = ["cnt", "t1", "hum", "is_holiday", "season"]
-values = ["1", "2"]
+values = [1, 2, 3]
 filter_feature = "season"
 features_q1 = ["hum", "t1", "cnt"]
 calc_for = ["season", "is_holiday", "All"]
 
 path = 'C:\\Users\Yael\Documents\python\london.csv'
+
+print(median(values))
 
 def load_data(path):
     df = pd.read_csv(path)
@@ -66,9 +75,9 @@ def q1(features_q1,calc_for,path):
             continue
         for j in features_q1:
             if(i=="season" and print_title==0):
-                print("Summer")
+                print("Summer:")
             elif(i=="is_holiday" and print_title==0):
-                print("Holiday")
+                print("Holiday:")
             total_sum = sum(df[df[i] == 1][j])
             total_mean = mean(df[df[i] == 1][j])
             #total_median = median(df(df[i] == 1][j])
@@ -76,7 +85,7 @@ def q1(features_q1,calc_for,path):
             #print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
             print_title=1
 
-    print("All")
+    print("All:")
     for j in features_q1:
         total_sum=sum(df[j])
         total_mean=mean(df[j])
@@ -87,8 +96,9 @@ def q1(features_q1,calc_for,path):
 feature="cnt"
 season_req=3
 temperature_req=13
-holidays=[0,1]
-def q2(feature,holidays,season_req,temp_req,path):
+
+
+def q2(season_req,path):
     """
        This function prints the mean and median of given feature from a given file
        according to the values of holidays and temperature request.
@@ -97,58 +107,56 @@ def q2(feature,holidays,season_req,temp_req,path):
        :returns: None
        :type: NoneType
        """
-
+    treatment = 't1'
+    target = 'cnt'
+    is_holiday = ['weekday', 'holiday']
+    threshold = 13
     df = pd.read_csv(path)
-    for i in holidays:
-        print("If t1<=13.0, then:")
-
-        if(i==1):
-            print("Winter holiday records: ")
-        else:
-            print("Winter weedays records: ")
-
-        mean_calc=mean(df.loc[(df['season'] == season_req) & (df['is_holiday'] == i) & (df['t1']<=temperature_req), 'cnt'])
-        median_calc = median(df.loc[(df['season'] == season_req) & (df['is_holiday'] == i) & (df['t1'] <= temperature_req), 'cnt'])
-        print("cnt: "+str(mean_calc)+", "+str(median_calc))
-
-        print("If t1>13.0, then: ")
-
-        if(i==1):
-            print("Winter holiday records: ")
-        else:
-            print("Winter weedays records: ")
-
-        mean_calc = mean(df.loc[(df['season'] == season_req) & (df['is_holiday'] == i) & (df['t1'] > temperature_req), 'cnt'])
-        median_calc = median(df.loc[(df['season'] == season_req) & (df['is_holiday'] == i) & (df['t1'] > temperature_req), 'cnt'])
-        print("cnt: " + str(mean_calc) + ", " + str(median_calc))
+    new_data = df.loc[df['season'] == season_req]
+    print("Question 2:")
+    for i in range(2):
+        if (i == 0): #temp <= 13
+            is_above = False
+            print("If t1<=13.0, then:")
+            for j in range(1, -1, -1):
+                population_statistics(is_holiday[j], new_data, treatment, target, threshold, is_above, choose_func)
+        else: #temp > 13
+            print("If t1>13.0, then: ")
+            is_above = True
+            for k in range(1, -1, -1):
+                population_statistics(is_holiday[k], new_data, treatment, target, threshold, is_above, choose_func)
 
 
 
-#q2(feature,holidays,season_req,temperature_req,path)
 
-"""
-def population_statistics(feature_description, data, treatment, target, threshold, is_above,
-statistic_functions):
 
-    path = 'C:\\Users\Yael\Documents\python\london.csv'
-    df = pd.read_csv(path)
-    if(is_above==True):
-        sum_of_target = sum(df[df[treatment] > threshold][target])
-        mean_of_target = mean(df[df[treatment] > threshold][target])
-        median_of_target= median(df[df[treatment] > threshold][target])
+
+
+def population_statistics(feature_description, data, treatment, target, threshold, is_above, statistic_functions):
+    if feature_description == 'holiday':
+        holy_or_not = 1
     else:
-        sum_of_target = sum(df[df[treatment] <= threshold][target])
-        mean_of_target = mean(df[df[treatment] <= threshold][target])
-        median_of_target= median(df[df[treatment] <= threshold][target])
+        holy_or_not = 0
+    if(is_above == True):
+        mean_of_target = mean(data.loc[(data['is_holiday'] == holy_or_not) & (data[treatment] > threshold), target])
+        #median_of_target= median(df[df[treatment] > threshold][target])
+    else:
+        mean_of_target = mean(data.loc[(data['is_holiday'] == holy_or_not) & (data[treatment] <= threshold), target])
+        #median_of_target= median(df[df[treatment] <= threshold][target])
+    print("Winter " + feature_description + " records:\ncnt: " + str(mean_of_target) + ", ")
+    #print(feature_description+" "+str(sum_of_target)+", "+str(mean_of_target)+", "+str(median_of_target))
 
-    print(feature_description+" "+str(sum_of_target)+", "+str(mean_of_target)+", "+str(median_of_target))
-    """
 
 
+feature_description = "Winter Holiday Records:\n"
+treatment = "t1"
+target = "cnt"
 
-df = pd.read_csv(path)
-#fea_dic = df[filter_feature]
-#filter_by_feature(fea_dic, filter_feature, values)
+data = load_data(path)
 
 q1(features_q1,calc_for,path)
 
+
+q2(season_req,path)
+
+population_statistics(feature_description, data, treatment, target, threshold)
