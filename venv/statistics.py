@@ -1,24 +1,33 @@
 values = [1, 7, 5, 7, 3, 3]
 
-def happy(values):
-    return 0
-
+def sum(values):
+    """
+    This function calculates the sum2 of given values.
+    :parameters: values
+    :type: float[]
+    :returns: sum2
+    :type: float
+    """
+    sum2 = 0
+    for i in values:
+        sum2 += i
+    return(sum2)
 
 def mean(values):
     """
     This function finds the mean of given values.
     :parameters: values
     :type: float[]
-    :returns: sum
+    :returns: sum1
     :type: float
     """
-    sum = 0
+    sum1 = 0
     count = 0
     for i in values:
-        sum += i
+        sum1 += i
         count = count + 1
     return(count)
-    return(sum/count)
+    return(sum1/count)
 
 
 def median(values):
@@ -94,13 +103,11 @@ def mergeSort(arr, l, r):
 
 
 n = len(values)
-print("Given array is")
-for i in range(n):
-    print("%d" % values[i]),
+
 
 mergeSort(values, 0, n - 1)
 
 
-my_sum(values)
+sum(values)
 mean(values)
 median(values)

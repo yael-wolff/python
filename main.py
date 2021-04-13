@@ -1,7 +1,6 @@
 import sys
 import pandas as pd
-from statistics import mean, median, happy
-
+from statistics import mean, median, sum
 
 
 
@@ -26,7 +25,7 @@ file.write(str(dictionary_data))
 file.close()
 
 def filter_by_feature(data, feature, values):
-    m = 0;
+    m = 0
     len_of_dic = len(data)
     data1 = [None] * len_of_dic
     data2 = [None] * len_of_dic
@@ -57,8 +56,6 @@ def q1(features_q1,calc_for,path):
        :type: NoneType
        """
     df = pd.read_csv(path)
-    print_title=0
-
     #code for calculations on columns:
     #total_mean_cnt_summer=mean(df[df['season'] == 1]['cnt'])
 
@@ -72,18 +69,20 @@ def q1(features_q1,calc_for,path):
                 print("Summer")
             elif(i=="is_holiday" and print_title==0):
                 print("Holiday")
-            total_sum = my_sum(df[df[i] == 1][j])
+            total_sum = sum(df[df[i] == 1][j])
             total_mean = mean(df[df[i] == 1][j])
-            total_median = median(df[df[i] == 1][j])
-            print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
+            #total_median = median(df(df[i] == 1][j])
+            print(j+": "+str(total_sum)+", "+str(total_mean))
+            #print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
             print_title=1
 
     print("All")
     for j in features_q1:
-        total_sum=my_sum(df[j])
+        total_sum=sum(df[j])
         total_mean=mean(df[j])
-        total_median=median(df[j])
-        print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
+        #total_median=median(df[j])
+        print(j + ": " + str(total_sum) + ", " + str(total_mean))
+        #print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
 
 feature="cnt"
 season_req=3
@@ -127,32 +126,29 @@ def q2(feature,holidays,season_req,temp_req,path):
 
 #q2(feature,holidays,season_req,temperature_req,path)
 
+"""
 def population_statistics(feature_description, data, treatment, target, threshold, is_above,
 statistic_functions):
-    """
 
-       :type:
-       :returns:
-       :type:
-    """
     path = 'C:\\Users\Yael\Documents\python\london.csv'
     df = pd.read_csv(path)
     if(is_above==True):
-        sum_of_target = my_sum(df[df[treatment] > threshold][target])
+        sum_of_target = sum(df[df[treatment] > threshold][target])
         mean_of_target = mean(df[df[treatment] > threshold][target])
         median_of_target= median(df[df[treatment] > threshold][target])
     else:
-        sum_of_target = my_sum(df[df[treatment] <= threshold][target])
+        sum_of_target = sum(df[df[treatment] <= threshold][target])
         mean_of_target = mean(df[df[treatment] <= threshold][target])
         median_of_target= median(df[df[treatment] <= threshold][target])
 
     print(feature_description+" "+str(sum_of_target)+", "+str(mean_of_target)+", "+str(median_of_target))
+    """
 
 
 
-#df = pd.read_csv(path)
+df = pd.read_csv(path)
 #fea_dic = df[filter_feature]
 #filter_by_feature(fea_dic, filter_feature, values)
 
-#q1(features_q1,calc_for,path)
+q1(features_q1,calc_for,path)
 
