@@ -1,18 +1,8 @@
 values = [1, 7, 5, 7, 3, 3]
 
+def happy(values):
+    return 0
 
-def sum(values):
-    """
-    This function calculates the sum of given values.
-    :parameters: values
-    :type: float[]
-    :returns: sum
-    :type: float
-    """
-    sum = 0
-    for i in values:
-        sum += i
-    print(sum)
 
 def mean(values):
     """
@@ -27,8 +17,8 @@ def mean(values):
     for i in values:
         sum += i
         count = count + 1
-    print(count)
-    print(sum/count)
+    return(count)
+    return(sum/count)
 
 
 def median(values):
@@ -41,7 +31,7 @@ def median(values):
         mid_val = ((values[place]) + (values[place-1]))/2
     if count % 2 == 1 :
         mid_val = values[(count/2) + 1]
-    print(mid_val)
+    return(mid_val)
 # need to add docstring
 
 def merge(arr, l, m, r):
@@ -111,6 +101,6 @@ for i in range(n):
 mergeSort(values, 0, n - 1)
 
 
-sum(values)
+my_sum(values)
 mean(values)
 median(values)
