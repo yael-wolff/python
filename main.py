@@ -1,6 +1,11 @@
+THRESHOLD = 13
+SEASON_REQ = 3
+
 import sys
 import pandas as pd
-from statistics import mean, median, sum, inside_median, mergeSort, merge
+
+from statistics import mean, median, sum
+
 
 
 def choose_func(name, values):
@@ -14,12 +19,10 @@ def choose_func(name, values):
 features = ["cnt", "t1", "hum", "is_holiday", "season"]
 values = [1, 2, 3]
 filter_feature = "season"
-features_q1 = ["hum", "t1", "cnt"]
+
 calc_for = ["season", "is_holiday", "All"]
 
-path = 'C:\\Users\Yael\Documents\python\london.csv'
 
-print(median(values))
 
 def load_data(path):
     df = pd.read_csv(path)
@@ -27,11 +30,7 @@ def load_data(path):
     data = fea_dic.to_dict(orient='list')
     return(data)
 
-dictionary_data = load_data(path)
 
-file = open("data.py","w")
-file.write(str(dictionary_data))
-file.close()
 
 def filter_by_feature(data, feature, values):
     m = 0
@@ -55,7 +54,7 @@ def filter_by_feature(data, feature, values):
 #def print_details(data, features, statistic_functions):
 
 
-def q1(features_q1,calc_for,path):
+def print_values_from_file(features_q1,calc_for,path):
     """
        This function prints the sum, mean and median of given features from a given file
        according to the values of another features.
@@ -66,7 +65,6 @@ def q1(features_q1,calc_for,path):
        """
     df = pd.read_csv(path)
     #code for calculations on columns:
-    #total_mean_cnt_summer=mean(df[df['season'] == 1]['cnt'])
 
     print("Question 1:")
     for i in calc_for:
@@ -80,25 +78,20 @@ def q1(features_q1,calc_for,path):
                 print("Holiday:")
             total_sum = sum(df[df[i] == 1][j])
             total_mean = mean(df[df[i] == 1][j])
-            #total_median = median(df(df[i] == 1][j])
-            print(j+": "+str(total_sum)+", "+str(total_mean))
-            #print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
+            total_median = median(df[df[i] == 1][j])
+            print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
             print_title=1
 
     print("All:")
     for j in features_q1:
         total_sum=sum(df[j])
         total_mean=mean(df[j])
-        #total_median=median(df[j])
-        print(j + ": " + str(total_sum) + ", " + str(total_mean))
-        #print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
-
-feature="cnt"
-season_req=3
-temperature_req=13
+        total_median=median(df[j])
+        print(j+": "+str(total_sum)+", "+str(total_mean)+", "+str(total_median))
 
 
-def q2(season_req,path):
+
+def calcu_popu_stati(SEASON_REQ, path, threshold):
     """
        This function prints the mean and median of given feature from a given file
        according to the values of holidays and temperature request.
@@ -110,9 +103,8 @@ def q2(season_req,path):
     treatment = 't1'
     target = 'cnt'
     is_holiday = ['weekday', 'holiday']
-    threshold = 13
     df = pd.read_csv(path)
-    new_data = df.loc[df['season'] == season_req]
+    new_data = df.loc[df['season'] == SEASON_REQ]
     print("Question 2:")
     for i in range(2):
         if (i == 0): #temp <= 13
@@ -139,24 +131,30 @@ def population_statistics(feature_description, data, treatment, target, threshol
         holy_or_not = 0
     if(is_above == True):
         mean_of_target = mean(data.loc[(data['is_holiday'] == holy_or_not) & (data[treatment] > threshold), target])
-        #median_of_target= median(df[df[treatment] > threshold][target])
+        median_of_target = median(data.loc[(data['is_holiday'] == holy_or_not) & (data[treatment] > threshold), target])
     else:
         mean_of_target = mean(data.loc[(data['is_holiday'] == holy_or_not) & (data[treatment] <= threshold), target])
+        median_of_target = median(data.loc[(data['is_holiday'] == holy_or_not) & (data[treatment] <= threshold), target])
         #median_of_target= median(df[df[treatment] <= threshold][target])
-    print("Winter " + feature_description + " records:\ncnt: " + str(mean_of_target) + ", ")
-    #print(feature_description+" "+str(sum_of_target)+", "+str(mean_of_target)+", "+str(median_of_target))
+    print("Winter " + feature_description + " records:\ncnt: " + str(mean_of_target) + ", " + str(median_of_target))
+
+
+def main(argv):
+    path = argv[1]
+    dictionary_data = load_data(path)
+    file = open("data.py", "w")
+    file.write(str(dictionary_data))
+    file.close()
+    features = argv[2].split(", ")
+    features_q1 = features[:3]
+    print_values_from_file(features_q1, calc_for, path)
+    calcu_popu_stati(SEASON_REQ, path, THRESHOLD)
+
+if __name__ == '__main__':
+    main(sys.argv)
 
 
 
-feature_description = "Winter Holiday Records:\n"
-treatment = "t1"
-target = "cnt"
-
-data = load_data(path)
-
-q1(features_q1,calc_for,path)
 
 
-q2(season_req,path)
 
-population_statistics(feature_description, data, treatment, target, threshold)
